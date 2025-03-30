@@ -13,7 +13,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 빌드된 JAR 복사 (경로는 프로젝트 구조에 맞게!)
-COPY --from=builder /home/app/build/libs/*.jar app.jar
+COPY --from=builder /home/app/restaurant-service/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
