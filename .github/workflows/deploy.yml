@@ -41,8 +41,8 @@ jobs:
       - name: ⚙️ Gradle Build - Order
         run: ./gradlew :order-service:build -x test
 
-      - name: 🐳 ACR Docker Login
-        run: az acr login --name team08registry
+      - name: 🐳 Docker Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: 🐳 Docker Build & Push - Order
         run: |
@@ -80,8 +80,8 @@ jobs:
       - name: ⚙️ Gradle Build - Restaurant
         run: ./gradlew :restaurant-service:build -x test
 
-      - name: 🐳 ACR Docker Login
-        run: az acr login --name team08registry
+      - name: 🐳 Docker Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: 🐳 Docker Build & Push - Restaurant
         run: |
@@ -109,7 +109,6 @@ jobs:
           kubectl create secret generic openai-secret \
             --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
             --dry-run=client -o yaml | kubectl apply -f -
-
 
       - name: 🛠 Deploy Restaurant
         run: |
