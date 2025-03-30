@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-deployment
+  labels:
+    app: restaurant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant
+  template:
+    metadata:
+      labels:
+        app: restaurant
+    spec:
+      containers:
+        - name: restaurant
+          image: team08registry.azurecr.io/restaurant-service:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: restaurant-db-secret
+                  key: DB_URL_RESTAURANT
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: restaurant-db-secret
+                  key: DB_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: restaurant-db-secret
+                  key: DB_PASSWORD
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: team08kafka.servicebus.windows.net:9093
+            - name: KAFKA_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secret
+                  key: CONNECTION_STRING
+            - name: AZURE_STORAGE_ACCOUNT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: azure-storage-secret
+                  key: AZURE_STORAGE_ACCOUNT_KEY
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: OPENAI_API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  type: ClusterIP
+  selector:
+    app: restaurant
+  ports:
+    - port: 80
+      targetPort: 8080

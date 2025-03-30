@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 spring:
   application:
@@ -46,9 +46,9 @@ openai:
 
 springdoc:
   api-docs:
-    path: /order/v3/api-docs
+    path: /restaurant/v3/api-docs
   swagger-ui:
-    path: /order/swagger-ui.html
+    path: /restaurant/swagger-ui.html
   use-root-path: true
 
 
