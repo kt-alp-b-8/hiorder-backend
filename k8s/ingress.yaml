@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          # 테스트용 -> 삭제 금지
+          - path: /producer
+            pathType: Prefix
+            backend:
+              service:
+                name: producer-service
+                port:
+                  number: 80
+          - path: /consumer
+            pathType: Prefix
+            backend:
+              service:
+                name: consumer-service
+                port:
+                  number: 80
+          # 실서비스용
+          - path: /order
+            pathType: Prefix
+            backend:
+              service:
+                name: order-service
+                port:
+                  number: 80
+#          - path: /payment
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: payment-service
+#                port:
+#                  number: 80
+#          - path: /auth
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: keycloak
+#                port:
+#                  number: 8080
