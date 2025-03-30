@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: team08registry.azurecr.io/order-service:v1
+          image: team08registry.azurecr.io/order-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

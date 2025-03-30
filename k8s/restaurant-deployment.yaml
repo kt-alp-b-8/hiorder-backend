@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: restaurant
-          image: team08registry.azurecr.io/restaurant-service:v1
+          image: team08registry.azurecr.io/restaurant-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
