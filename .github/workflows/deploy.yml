@@ -51,6 +51,11 @@ jobs:
           docker push team08registry.azurecr.io/$ORDER_IMAGE_TAG
           echo "ORDER_IMAGE_TAG=$ORDER_IMAGE_TAG" >> $GITHUB_ENV
 
+      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: ☘️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
@@ -89,6 +94,11 @@ jobs:
           docker build -f ./restaurant-service/Dockerfile -t team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG .
           docker push team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
           echo "RESTAURANT_IMAGE_TAG=$RESTAURANT_IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: ☘️ Set AKS Context
         uses: azure/aks-set-context@v3
