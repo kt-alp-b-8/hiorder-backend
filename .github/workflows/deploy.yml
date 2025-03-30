@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: ⚙️ Gradle Build - Order
-        run: ./gradlew :order:build
+        run: ./gradlew :order-service:build -x test
 
       - name: 🐳 ACR Docker Login
         run: az acr login --name team08registry
@@ -78,7 +78,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: ⚙️ Gradle Build - Restaurant
-        run: ./gradlew :restaurant:build
+        run: ./gradlew :restaurant-service:build -x test
 
       - name: 🐳 ACR Docker Login
         run: az acr login --name team08registry
