@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order-service/hiorder-backend.order-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/order-service/hiorder-backend.order-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/restaurant-service/hiorder-backend.restaurant-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/restaurant-service/hiorder-backend.restaurant-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/restaurant-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/restaurant-service.main.iml" />
+    </modules>
+  </component>
+</project>

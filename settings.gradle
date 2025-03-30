@@ -1,1 +1,3 @@
 rootProject.name = 'hiorder-backend'
+include('order-service')
+include('restaurant-service')
