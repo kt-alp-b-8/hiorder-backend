@@ -12,5 +12,5 @@
 *.log
 
 # yaml
-order-service/application-local.yml
-restaurant-service/application-local.yml
+order-service/src/main/resources/application-local.yml
+restaurant-service/src/main/resources/application-local.yml
