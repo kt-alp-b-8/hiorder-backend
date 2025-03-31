@@ -41,12 +41,11 @@ spring:
 
 
 springdoc:
-  swagger-ui:
-    path: /order/swagger-ui.html
   api-docs:
     path: /order/v3/api-docs
-  use-root-path: false
-
+  swagger-ui:
+    path: /order/swagger-ui.html
+  use-root-path: true
 
 
 azure:
