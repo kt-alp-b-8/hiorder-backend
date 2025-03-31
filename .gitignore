@@ -4,6 +4,7 @@
 **/build/
 order-service/build/
 restaurant-service/build/
+payment-service/build/
 
 # IDE
 *.iml
@@ -16,3 +17,4 @@ restaurant-service/build/
 # yaml
 order-service/src/main/resources/application-local.yml
 restaurant-service/src/main/resources/application-local.yml
+payment-service/src/main/resources/application-local.yml
