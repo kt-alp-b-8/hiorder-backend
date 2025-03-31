@@ -42,9 +42,9 @@ spring:
 
 springdoc:
   api-docs:
-    path: /order/v3/api-docs
+    path: /v3/api-docs     # 앞에 /order 제거
   swagger-ui:
-    path: /order/swagger-ui.html
+    path: /swagger-ui.html # 앞에 /order 제거
   use-root-path: true
 
 
