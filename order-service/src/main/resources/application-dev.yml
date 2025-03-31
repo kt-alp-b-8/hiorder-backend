@@ -47,7 +47,6 @@ springdoc:
     path: /order/swagger-ui.html
   use-root-path: true
 
-
 azure:
   storage:
     account-name: team08sa
