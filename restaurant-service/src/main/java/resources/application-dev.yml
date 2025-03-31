@@ -3,11 +3,11 @@ server:
 
 spring:
   application:
-    name: order-service
+    name: restaurant-service
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL_ORDER}
+    url: ${DB_URL_RESTAURANT}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
@@ -39,12 +39,16 @@ spring:
         username="$ConnectionString"
         password="${KAFKA_CONNECTION_STRING}";
 
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+  url: 'https://api.openai.com/v1/chat/completions'
 
 springdoc:
   api-docs:
-    path: /order/v3/api-docs
+    path: /restaurant/v3/api-docs
   swagger-ui:
-    path: /order/swagger-ui.html
+    path: /restaurant/swagger-ui.html
   use-root-path: true
 
 
