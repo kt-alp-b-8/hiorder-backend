@@ -2,6 +2,8 @@
 .gradle/
 **/.gradle/
 **/build/
+order-service/build/
+restaurant-service/build/
 
 # IDE
 *.iml
