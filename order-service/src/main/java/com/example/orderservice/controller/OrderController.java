@@ -4,6 +4,7 @@ import com.example.orderservice.controller.api.ApiResult;
 import com.example.orderservice.dto.request.OrderCreateRequest;
 import com.example.orderservice.dto.response.OrderCreateResponse;
 import com.example.orderservice.dto.response.OrderStatusChangeResponse;
+import com.example.orderservice.entity.OrderStatus;
 import com.example.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,63 +58,29 @@ public class OrderController {
         return ApiResult.ok(HttpStatus.OK, orderService.changeOrderStatus(restaurantId, tableId));
     }
 
+    @GetMapping("/{restaurantId}/orders/history")
+    public ApiResult<?> getRestaurantOrderHistory(@PathVariable("restaurantId") Long restaurantId,
+                                                       @RequestParam(name="orderStatus", required=false, defaultValue="IN_PROGRESS") String orderStatus,
+                                                       @RequestParam(name="orderCode", required=false, defaultValue="desc") String orderCode) {
 
-//    @GetMapping("/{restaurantId}/orders/history")
-//    public ResponseEntity<?> getRestaurantOrderHistory(
-//            @PathVariable("restaurantId") Long restaurantId,
-//            @RequestParam(name="orderStatus", required=false, defaultValue="PENDING") String orderStatus,
-//            @RequestParam(name="orderCode", required=false, defaultValue="desc") String orderCode
-//    ) {
-//        try {
-//            RestaurantOrderHistoryResponse response = orderService.getRestaurantOrderHistory(restaurantId, orderStatus, orderCode);
-//            return ResponseEntity.ok(response);
-//        } catch (IllegalArgumentException e) {
-//            // 400
-//            return ResponseEntity.badRequest().body(createErrorResponse(400, "요청 파라미터가 누락되었거나 형식이 올바르지 않습니다."));
-//        } catch (RuntimeException e) {
-//            // 404
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(createErrorResponse(404, e.getMessage()));
-//        } catch (Exception e) {
-//            // 500
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(createErrorResponse(500, "서버 내부 오류가 발생했습니다."));
-//        }
-//    }
-//
-//    private Object createErrorResponse(int status, String message) {
-//        return new Object() {
-//            public final int statusCode = status;
-//            public final boolean success = false;
-//            public final String msg = message;
-//        };
-//    }
-//
-//    @GetMapping("/{restaurantId}/tables/{tableId}/orders/history")
-//    public ResponseEntity<?> getTableOrderHistory(
-//            @PathVariable("restaurantId") Long restaurantId,
-//            @PathVariable("tableId") Long tableId,
-//            // [CHANGED] QueryParam name = orderStatus
-//            @RequestParam(name="orderStatus", required=false, defaultValue="PENDING") String orderStatus,
-//            // [CHANGED] QueryParam name = orderCode
-//            @RequestParam(name="orderCode", required=false, defaultValue="desc") String orderCode,
-//            @RequestParam(name="lang", required=false, defaultValue="kr") String lang // <-- 추가
-//    ) {
-//        try {
-//            TableOrderHistoryResponse response = orderService.getTableOrderHistory(restaurantId, tableId, orderStatus, orderCode, lang);
-//            return ResponseEntity.ok(response);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(createErrorResponse(400, "요청 파라미터가 누락되었거나 형식이 올바르지 않습니다."));
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(createErrorResponse(404, e.getMessage()));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(createErrorResponse(500, "서버 내부 오류가 발생했습니다."));
-//        }
-//    }
-//
-//    private Object createErrorResponse(int status, String message) {
-//        return new Object() {
-//            public final int statusCode = status;
-//            public final boolean success = false;
-//            public final String msg = message;
-//        };
-//    }
+        return ApiResult.ok(
+                HttpStatus.OK,
+                orderService.getRestaurantOrderHistory(restaurantId, OrderStatus.valueOf(orderStatus), orderCode)
+        );
+    }
+
+    @GetMapping("/{restaurantId}/tables/{tableId}/orders/history")
+    public ApiResult<?> getTableOrderHistory(@PathVariable("restaurantId") Long restaurantId,
+                                             @PathVariable("tableId") Long tableId,
+                                             @RequestParam(name="orderStatus", required=false, defaultValue="IN_PROGRESS") String orderStatus,
+                                             @RequestParam(name="orderCode", required=false, defaultValue="desc") String orderCode,
+                                             @RequestParam(name="lang", required=false, defaultValue="kr") String lang) {
+
+        return ApiResult.ok(
+                HttpStatus.OK,
+                orderService.getTableOrderHistory(restaurantId, tableId, OrderStatus.valueOf(orderStatus), orderCode, lang)
+        );
+
+    }
+
 }
