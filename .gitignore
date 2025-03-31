@@ -1,1 +1,15 @@
+# Gradle
+.gradle/
+**/.gradle/
+**/build/
+
+# IDE
+*.iml
+.idea/
+
+# OS / Editor
+.DS_Store
+*.log
+
+# yaml
 *.yml
