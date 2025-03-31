@@ -1,0 +1,150 @@
+name: CI/CD ACR + AKS (Multi-Services)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  setup-shared-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔐 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🔐 Create Secret - Kafka (공통)
+        run: |
+          kubectl create secret generic kafka-secret \
+            --from-literal=KAFKA_CONNECTION_STRING="${{ secrets.KAFKA_CONNECTION_STRING }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🔐 Create Secret - Azure Blob Storage (공통)
+        run: |
+          kubectl create secret generic azure-storage-secret \
+            --from-literal=AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+  build-deploy-order:
+    needs: setup-shared-resources
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Gradle Build - Order
+        run: ./gradlew :order-service:build -x test
+
+      - name: 🐳 Docker Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: 🐳 Docker Build & Push - Order
+        run: |
+          ORDER_IMAGE_TAG=order-service:${{ github.sha }}
+          docker build -f ./order-service/Dockerfile -t team08registry.azurecr.io/$ORDER_IMAGE_TAG .
+          docker push team08registry.azurecr.io/$ORDER_IMAGE_TAG
+          echo "ORDER_IMAGE_TAG=$ORDER_IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🔐 Create Secret - Order DB
+        run: |
+          kubectl create secret generic order-db-secret \
+            --from-literal=DB_URL_ORDER="${{ secrets.DB_URL_ORDER }}" \
+            --from-literal=DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🛠 Deploy Order
+        run: |
+          kubectl apply -f ./k8s/order-deployment.yaml
+          kubectl set image deployment/order-deployment order=team08registry.azurecr.io/$ORDER_IMAGE_TAG
+
+  build-deploy-restaurant:
+    needs: setup-shared-resources
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Gradle Build - Restaurant
+        run: ./gradlew :restaurant-service:build -x test
+
+      - name: 🐳 Docker Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: 🐳 Docker Build & Push - Restaurant
+        run: |
+          RESTAURANT_IMAGE_TAG=restaurant-service:${{ github.sha }}
+          docker build -f ./restaurant-service/Dockerfile -t team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG .
+          docker push team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
+          echo "RESTAURANT_IMAGE_TAG=$RESTAURANT_IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🔐 Create Secret - Restaurant DB
+        run: |
+          kubectl create secret generic restaurant-db-secret \
+            --from-literal=DB_URL_RESTAURANT="${{ secrets.DB_URL_RESTAURANT }}" \
+            --from-literal=DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🔐 Create Secret - OpenAI API Key
+        run: |
+          kubectl create secret generic openai-secret \
+            --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🛠 Deploy Restaurant
+        run: |
+          kubectl apply -f ./k8s/restaurant-deployment.yaml
+          kubectl set image deployment/restaurant-deployment restaurant=team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
+
+  apply-ingress:
+    needs: [build-deploy-order, build-deploy-restaurant]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔐 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🏪 Apply Ingress
+        run: |
+          kubectl apply -f ./k8s/ingress-class.yaml
+          kubectl delete ingress main-ingress --ignore-not-found
+          kubectl apply -f ./k8s/ingress.yaml

@@ -44,7 +44,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: kafka-secret
-                  key: CONNECTION_STRING
+                  key: KAFKA_CONNECTION_STRING   # ✅ 여기만 바뀜
             - name: AZURE_STORAGE_ACCOUNT_KEY
               valueFrom:
                 secretKeyRef:
