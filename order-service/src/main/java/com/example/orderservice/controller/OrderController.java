@@ -4,6 +4,8 @@ import com.example.orderservice.controller.api.ApiResult;
 import com.example.orderservice.dto.request.OrderCreateRequest;
 import com.example.orderservice.dto.response.OrderCreateResponse;
 import com.example.orderservice.dto.response.OrderStatusChangeResponse;
+import com.example.orderservice.dto.response.RestaurantOrderHistoryResponse;
+import com.example.orderservice.dto.response.TableOrderHistoryResponse;
 import com.example.orderservice.entity.OrderStatus;
 import com.example.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,6 +65,11 @@ public class OrderController {
         return ApiResult.ok(HttpStatus.OK, orderService.changeOrderStatus(restaurantId, tableId));
     }
 
+    @Operation(summary = "식당 주문 내역 조회", description = "사장님이 주문 내역을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "",
+                    content = @Content(schema = @Schema(implementation = RestaurantOrderHistoryResponse.class)))
+    })
     @GetMapping("/{restaurantId}/orders/history")
     public ApiResult<?> getRestaurantOrderHistory(@PathVariable("restaurantId") Long restaurantId,
                                                        @RequestParam(name="orderStatus", required=false, defaultValue="IN_PROGRESS") String orderStatus,
@@ -74,6 +81,15 @@ public class OrderController {
         );
     }
 
+    @Operation(summary = "주문 상태 수정", description = "사장님이 주문 상태를 수정한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "손님 퇴장 후, 주문 상태를 변경한다.",
+                    content = @Content(schema = @Schema(implementation = TableOrderHistoryResponse.class))),
+            @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json",
+                    examples = {@ExampleObject(name = "주문 정보가 없는 경우",
+                            value = "{\"code\":404, \"message\":\"주문 정보를 찾을 수 없습니다\"\"}")}
+            ))
+    })
     @GetMapping("/{restaurantId}/tables/{tableId}/orders/history")
     public ApiResult<?> getTableOrderHistory(@PathVariable("restaurantId") Long restaurantId,
                                              @PathVariable("tableId") Long tableId,
