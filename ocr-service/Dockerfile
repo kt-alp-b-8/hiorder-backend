@@ -6,7 +6,7 @@ WORKDIR /home/app
 COPY . .
 
 # OCR 서비스만 빌드
-RUN gradle :ocr-service:bootJar -x test --no-daemon
+RUN gradle :ocr:bootJar -x test --no-daemon
 
 # 2단계: 실행 이미지
 FROM openjdk:17-jdk-slim
