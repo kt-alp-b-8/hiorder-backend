@@ -1,22 +1,24 @@
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
 
-COPY . .
+# 인증서 복사 (GitHub Actions에서 미리 준비한 상태)
+COPY localhost+2.pem localhost+2.pem
+COPY localhost+2-key.pem localhost+2-key.pem
 
-# 필요한 경우 인증서 설치
-RUN apk add --no-cache openssl
+# 메인 서버
+COPY app.js index.html qr.html package*.json ./
 
-# 각 서브 폴더 의존성 설치
-RUN cd proxy-server && npm install && cd ..
-RUN cd auth-status-server && npm install && cd ..
+# 프록시 서버
+COPY proxy-server ./proxy-server
 
-# 메인 프로젝트 의존성
-RUN npm install -g http-server
+# 인증 상태 서버
+COPY auth-status-server ./auth-status-server
 
-# QR 서버가 8080 포트에서 index.html/qr.html을 제공하므로, 8080을 기본 포트로
-EXPOSE 8080
-EXPOSE 3000
+RUN npm install
+RUN cd proxy-server && npm install
+RUN cd auth-status-server && npm install
 
-CMD ["sh", "-c", "node proxy-server/server.js & node auth-status-server/server.js & http-server -p 8080 --cors"]
+EXPOSE 8080 3000
 
+CMD ["sh", "-c", "node proxy-server/server.js & node auth-status-server/server.js & node app.js"]

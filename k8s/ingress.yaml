@@ -43,8 +43,7 @@ spec:
               service:
                 name: ocr-service
                 port:
-                  number: 80
-
+                  number: 8080  # QR 페이지는 8080 포트에서 서빙되므로
 
 #          - path: /payment
 #            pathType: Prefix
