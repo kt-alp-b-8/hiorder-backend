@@ -32,7 +32,7 @@ public class OrderInfoDto {
                 .orderCode(order.getOrderCode())
                 .tableId(order.getTableId())
                 .orderTable(order.getOrderTableName())
-                .createdAt(order.getCreatedTime())
+                .createdAt(order.getCreatedAt())
                 .orderStatus(order.getOrderStatus())
                 .totalAmount(order.getTotalAmount())
                 .items(items)

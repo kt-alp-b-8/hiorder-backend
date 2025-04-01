@@ -35,7 +35,7 @@ public class OrderCreateResponse {
                 .tableId(order.getTableId())
                 .orderCode(order.getOrderCode())
                 .totalAmount(order.getTotalAmount())
-                .createdAt(order.getCreatedTime())
+                .createdAt(order.getCreatedAt())
                 .orderItems(orderItems)
                 .build();
     }
