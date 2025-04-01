@@ -34,7 +34,38 @@ public class RestaurantService {
     private final MenuRepository menuRepository;
     private final MenuCategoryRepository menuCategoryRepository;
 
-    public RestaurantCategoryInfoResponse getMenuCategories(Long restaurantId, String sortParam, String lang) {
+    public RestaurantCategoryInfoResponse getMenuCategories(Long restaurantId, String sortParam) {
+        // 1) 식당 존재 여부 확인
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("해당 식당을 찾을 수 없습니다."));
+
+        // 2) 카테고리 목록 조회
+        // 예: sortParam이 "displayOrder"라면 displayOrder 기준 정렬
+        //     sortParam이 null 또는 다른 값이라면 그냥 기본 정렬(예: id 순)
+        List<MenuCategory> categories;
+        if ("displayOrder".equals(sortParam)) {
+            categories = menuCategoryRepository.findByRestaurant_IdOrderByDisplayOrderAsc(restaurantId);
+        } else {
+            // 기본 정렬 (예: menuCategoryId asc) or 커스텀 로직
+            categories = menuCategoryRepository.findByRestaurant_Id(restaurantId);
+        }
+
+        // 3) DTO 변환
+        List<MenuCategoryDto> dtoList = categories.stream()
+                .map(cat -> MenuCategoryDto.builder()
+                        .menuCategoryId(cat.getId())
+                        .menuCategoryName(cat.getMenuCategoryName())
+                        .displayOrder(cat.getDisplayOrder())
+                        .build())
+                .collect(Collectors.toList());
+
+        // 4) 응답 구성
+        return RestaurantCategoryInfoResponse.builder()
+                .data(dtoList)
+                .build();
+    }
+
+    public RestaurantCategoryInfoResponse getMenuCategoriesByLang(Long restaurantId, String sortParam, String lang) {
 
         // 1) 식당 존재 여부 확인
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -93,30 +124,49 @@ public class RestaurantService {
         RestaurantTable table = restaurantTableRepository.findById(tableId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TABLE_NOT_FOUND));
 
-//        // 3) 테이블이 해당 식당에 속하는지 확인 (예: table.getRestaurant().getRestaurantId() == restaurantId)
-//        if (!table.getRestaurant().getRestaurantId().equals(restaurantId)) {
-//            // 식당id 불일치
-//            throw new RuntimeException("테이블이 해당 식당에 속해있지 않습니다.");
-//        }
-
         return RestaurantInfoResponse.builder()
                 .restaurantName(restaurant.getRestaurantName())
                 .tableName(table.getTableName())
                 .build();
     }
 
-    public RestaurantMenuInfoResponse getMenuList(Long restaurantId, Long menuCategoryId, String sortParam, String lang) {
-//        // 1) 식당 존재 확인
-//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-//                .orElseThrow(() -> new RuntimeException("해당 식당을 찾을 수 없습니다."));
+    public RestaurantMenuInfoResponse getMenuList(Long restaurantId, Long menuCategoryId, String sortParam) {
 
         // 2) 카테고리 존재 + 식당 소속 여부 확인
         MenuCategory category = menuCategoryRepository.findById(menuCategoryId)
                 .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
 
-//        if (!category.getRestaurant().getRestaurantId().equals(restaurantId)) {
-//            throw new RuntimeException("해당 카테고리가 이 식당에 속해있지 않습니다.");
-//        }
+        // 3) 메뉴 목록 조회
+        List<Menu> menus;
+        if ("displayOrder".equals(sortParam)) {
+            menus = menuRepository.findByRestaurant_IdAndMenuCategory_IdOrderByDisplayOrderAsc(restaurantId, menuCategoryId);
+        } else {
+            // 기본 정렬 (예: menu_id asc) or 다른 로직
+            menus = menuRepository.findByRestaurant_IdAndMenuCategory_Id(restaurantId, menuCategoryId);
+        }
+
+        // 4) DTO 변환
+        List<MenuDto> menuDtoList = menus.stream()
+                .map(menu -> MenuDto.builder()
+                        .menuId(menu.getId())
+                        .menuName(menu.getMenuName())
+                        .price(menu.getPrice())
+                        .menuDescription(menu.getMenuDescription())
+                        .menuImageUrl(menu.getMenuImageUrl())
+                        .displayOrder(menu.getDisplayOrder())
+                        .build())
+                .collect(Collectors.toList());
+
+        return RestaurantMenuInfoResponse.builder()
+                .data(menuDtoList)
+                .build();
+    }
+
+    public RestaurantMenuInfoResponse getMenuListByLang(Long restaurantId, Long menuCategoryId, String sortParam, String lang) {
+
+        // 2) 카테고리 존재 + 식당 소속 여부 확인
+        MenuCategory category = menuCategoryRepository.findById(menuCategoryId)
+                .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
 
         // 3) 메뉴 목록 조회
         List<Menu> menus;
