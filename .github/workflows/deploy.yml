@@ -30,6 +30,7 @@ jobs:
           kubectl create secret generic azure-storage-secret \
             --from-literal=AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" \
             --dry-run=client -o yaml | kubectl apply -f -
+
   build-deploy-order:
     needs: setup-shared-resources
     runs-on: ubuntu-latest
@@ -69,7 +70,7 @@ jobs:
             --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🛠️ Deploy Order
+      - name: 🚰️ Deploy Order
         run: |
           kubectl apply -f ./k8s/order-deployment.yaml
           kubectl set image deployment/order-deployment order=team08registry.azurecr.io/$ORDER_IMAGE_TAG
@@ -119,7 +120,7 @@ jobs:
             --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🛠️ Deploy Restaurant
+      - name: 🚰️ Deploy Restaurant
         run: |
           kubectl apply -f ./k8s/restaurant-deployment.yaml
           kubectl set image deployment/restaurant-deployment restaurant=team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
@@ -128,7 +129,7 @@ jobs:
     needs: setup-shared-resources
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout Code
+      - name: 📅 Checkout Code
         uses: actions/checkout@v3
 
       - name: 🐳 Docker Login to ACR
@@ -154,11 +155,11 @@ jobs:
 
       - name: 🔐 Create Secret - OCR Certs
         run: |
-          echo "${{ secrets.OCR_CERT_KEY }}" | base64 --decode > ./ocr-service/localhost+2-key.pem
-          echo "${{ secrets.OCR_CERT_CRT }}" | base64 --decode > ./ocr-service/localhost+2.pem
+          echo "${{ secrets.OCR_CERT_KEY }}" | base64 --decode > ./ocr-service/localhost2_key.pem
+          echo "${{ secrets.OCR_CERT_CRT }}" | base64 --decode > ./ocr-service/localhost2.pem
           kubectl create secret generic ocr-certificates \
-            --from-file=localhost+2-key.pem=./ocr-service/localhost+2-key.pem \
-            --from-file=localhost+2.pem=./ocr-service/localhost+2.pem \
+            --from-file=localhost2_key.pem=./ocr-service/localhost2_key.pem \
+            --from-file=localhost2.pem=./ocr-service/localhost2.pem \
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: 🚀 Deploy OCR
@@ -167,10 +168,10 @@ jobs:
           kubectl set image deployment/ocr-deployment ocr=team08registry.azurecr.io/$OCR_IMAGE_TAG
 
   apply-ingress:
-    needs: [build-deploy-order, build-deploy-restaurant]
+    needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr]
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout Code
+      - name: 📅 Checkout code
         uses: actions/checkout@v3
 
       - name: 🔐 Azure Login
@@ -184,7 +185,7 @@ jobs:
           resource-group: team08
           cluster-name: team08aks
 
-      - name: 🌐 Apply Ingress
+      - name: 🏪 Apply Ingress
         run: |
           kubectl apply -f ./k8s/ingress-class.yaml
           kubectl delete ingress main-ingress --ignore-not-found
