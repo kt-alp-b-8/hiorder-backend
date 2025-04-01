@@ -1,10 +1,6 @@
 module.exports = {
     apps: [
         {
-            name: "main-app",
-            script: "app.js"
-        },
-        {
             name: "proxy-server",
             script: "proxy-server/server.js"
         },
