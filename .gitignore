@@ -16,3 +16,6 @@ restaurant-service/build/
 # yaml
 order-service/src/main/resources/application-local.yml
 restaurant-service/src/main/resources/application-local.yml
+
+#.pem
+*.pem

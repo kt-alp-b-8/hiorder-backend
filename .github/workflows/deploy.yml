@@ -1,4 +1,4 @@
-name: CI/CD ACR + AKS (Multi-Services)
+name: ✨ CI/CD ACR + AKS (Multi-Services)
 
 on:
   push:
@@ -19,13 +19,13 @@ jobs:
           resource-group: team08
           cluster-name: team08aks
 
-      - name: 🔐 Create Secret - Kafka (공통)
+      - name: 🔐 Create Secret - Kafka (Common)
         run: |
           kubectl create secret generic kafka-secret \
             --from-literal=KAFKA_CONNECTION_STRING="${{ secrets.KAFKA_CONNECTION_STRING }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🔐 Create Secret - Azure Blob Storage (공통)
+      - name: 🔐 Create Secret - Azure Blob Storage (Common)
         run: |
           kubectl create secret generic azure-storage-secret \
             --from-literal=AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" \
@@ -35,13 +35,13 @@ jobs:
     needs: setup-shared-resources
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout code
+      - name: 📅 Checkout Code
         uses: actions/checkout@v3
 
       - name: ⚙️ Gradle Build - Order
         run: ./gradlew :order-service:build -x test
 
-      - name: 🐳 Docker Login to ACR
+      - name: 🐳 Docker Login
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: 🐳 Docker Build & Push - Order
@@ -51,7 +51,7 @@ jobs:
           docker push team08registry.azurecr.io/$ORDER_IMAGE_TAG
           echo "ORDER_IMAGE_TAG=$ORDER_IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+      - name: 🔐 Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -70,7 +70,7 @@ jobs:
             --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🛠 Deploy Order
+      - name: 🛠️ Deploy Order
         run: |
           kubectl apply -f ./k8s/order-deployment.yaml
           kubectl set image deployment/order-deployment order=team08registry.azurecr.io/$ORDER_IMAGE_TAG
@@ -79,13 +79,13 @@ jobs:
     needs: setup-shared-resources
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout code
+      - name: 📅 Checkout Code
         uses: actions/checkout@v3
 
       - name: ⚙️ Gradle Build - Restaurant
         run: ./gradlew :restaurant-service:build -x test
 
-      - name: 🐳 Docker Login to ACR
+      - name: 🐳 Docker Login
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
       - name: 🐳 Docker Build & Push - Restaurant
@@ -95,7 +95,7 @@ jobs:
           docker push team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
           echo "RESTAURANT_IMAGE_TAG=$RESTAURANT_IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: 🔐 Azure Login      # 여기에 추가해야 함!
+      - name: 🔐 Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -114,22 +114,67 @@ jobs:
             --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🔐 Create Secret - OpenAI API Key
+      - name: 🔐 Create Secret - OpenAI
         run: |
           kubectl create secret generic openai-secret \
             --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: 🛠 Deploy Restaurant
+      - name: 🛠️ Deploy Restaurant
         run: |
           kubectl apply -f ./k8s/restaurant-deployment.yaml
           kubectl set image deployment/restaurant-deployment restaurant=team08registry.azurecr.io/$RESTAURANT_IMAGE_TAG
 
-  apply-ingress:
-    needs: [build-deploy-order, build-deploy-restaurant]
+  build-deploy-ocr:
+    needs: setup-shared-resources
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout code
+      - name: 📅 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Gradle Build - OCR
+        run: ./gradlew :ocr-service:build -x test
+
+      - name: 🐳 Docker Login
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: 🐳 Docker Build & Push - OCR
+        run: |
+          OCR_IMAGE_TAG=ocr-service:${{ github.sha }}
+          docker build -f ./ocr-service/Dockerfile -t team08registry.azurecr.io/$OCR_IMAGE_TAG .
+          docker push team08registry.azurecr.io/$OCR_IMAGE_TAG
+          echo "OCR_IMAGE_TAG=$OCR_IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🔐 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🔐 Create Secret - OCR Certs
+        run: |
+          echo "${{ secrets.OCR_CERT_KEY }}" | base64 -d > ./localhost+2-key.pem
+          echo "${{ secrets.OCR_CERT_CRT }}" | base64 -d > ./localhost+2.pem
+          kubectl create secret generic ocr-certificates \
+            --from-file=localhost+2-key.pem=./localhost+2-key.pem \
+            --from-file=localhost+2.pem=./localhost+2.pem \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🛠️ Deploy OCR
+        run: |
+          kubectl apply -f ./k8s/ocr-deployment.yaml
+          kubectl set image deployment/ocr-deployment ocr=team08registry.azurecr.io/$OCR_IMAGE_TAG
+
+  apply-ingress:
+    needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📅 Checkout Code
         uses: actions/checkout@v3
 
       - name: 🔐 Azure Login

@@ -37,6 +37,14 @@ spec:
                 name: restaurant-service
                 port:
                   number: 80
+          - path: /ocr
+            pathType: Prefix
+            backend:
+              service:
+                name: ocr-service
+                port:
+                  number: 80
+
 
 #          - path: /payment
 #            pathType: Prefix
