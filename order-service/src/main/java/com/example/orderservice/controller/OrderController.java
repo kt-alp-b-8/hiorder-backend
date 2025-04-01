@@ -30,11 +30,6 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/test")
-    public String hello() {
-        return "hello";
-    }
-
     @Operation(summary = "주문 생성", description = "주문 시, 주문이 생성된다.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "식당명/테이블명이 조회된다.",
