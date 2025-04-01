@@ -2,23 +2,11 @@ FROM node:18
 
 WORKDIR /app
 
-# 인증서 복사 (GitHub Actions에서 미리 준비한 상태)
-COPY localhost+2.pem localhost+2.pem
-COPY localhost+2-key.pem localhost+2-key.pem
+COPY package*.json ./
+RUN npm install -g http-server pm2 && npm install
 
-# 메인 서버
-COPY app.js index.html qr.html package*.json ./
+COPY . .
 
-# 프록시 서버
-COPY proxy-server ./proxy-server
-
-# 인증 상태 서버
-COPY auth-status-server ./auth-status-server
-
-RUN npm install
-RUN cd proxy-server && npm install
-RUN cd auth-status-server && npm install
-
-EXPOSE 8080 3000
-
-CMD ["sh", "-c", "node proxy-server/server.js & node auth-status-server/server.js & node app.js"]
+# 인증서는 쿠버네티스에서 마운트
+# ENTRYPOINT를 통해 모든 서버 동시 실행
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
