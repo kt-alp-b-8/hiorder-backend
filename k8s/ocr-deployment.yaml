@@ -18,11 +18,11 @@ spec:
         - name: ocr
           image: team08registry.azurecr.io/ocr-service
           ports:
-            - containerPort: 8080
-            - containerPort: 3000
+            - containerPort: 8080  # QR html
+            - containerPort: 3000  # 프록시
           volumeMounts:
             - name: certs
-              mountPath: /app/node
+              mountPath: /app
       volumes:
         - name: certs
           secret:
@@ -37,9 +37,9 @@ spec:
   selector:
     app: ocr
   ports:
-    - name: spring
+    - name: qr
       port: 8080
       targetPort: 8080
-    - name: node
+    - name: proxy
       port: 3000
       targetPort: 3000
