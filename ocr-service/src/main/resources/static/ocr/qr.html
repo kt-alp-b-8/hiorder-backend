@@ -1,0 +1,41 @@
+<!-- resources/static/ocr/qr.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>하이오더 본인인증 서비스</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<h1>QR코드로 본인인증 시작</h1>
+<div id="qrcode"></div>
+<p>QR을 스캔하면 촬영 페이지로 이동합니다.</p>
+<p id="auth-count"></p>
+
+<script>
+    const baseUrl = "http://20.249.70.136/ocr"; // 클러스터 외부 IP
+    const authPageUrl = `${baseUrl}/index.html`;
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: authPageUrl,
+        width: 256,
+        height: 256
+    });
+
+    async function fetchAuthCount() {
+        try {
+            const response = await fetch(`${baseUrl}/count`);
+            const data = await response.json();
+            document.getElementById("auth-count").innerText =
+                `${data.count}명 인증 완료`;
+        } catch (e) {
+            console.error("카운트 오류", e);
+        }
+    }
+
+    fetchAuthCount();
+    setInterval(fetchAuthCount, 3000);
+</script>
+</body>
+</html>

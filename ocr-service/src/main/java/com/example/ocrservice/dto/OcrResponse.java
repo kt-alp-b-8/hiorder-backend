@@ -1,10 +1,12 @@
 package com.example.ocrservice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OcrResponse {
     private String type;
     private String name;

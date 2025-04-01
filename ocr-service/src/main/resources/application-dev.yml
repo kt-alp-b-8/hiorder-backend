@@ -1,13 +1,2 @@
 server:
-  port: 3000
-  ssl:
-    enabled: true
-    key-store: classpath:keystore.p12
-    key-store-password: 1234
-    key-store-type: PKCS12
-
-spring:
-  main:
-    web-application-type: servlet
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  port: 8080
