@@ -1,9 +1,10 @@
 server:
   port: 3000
-
-ssl:
-  cert: ${SSL_CERT_BASE64}
-  key: ${SSL_KEY_BASE64}
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: 1234
+    key-store-type: PKCS12
 
 spring:
   main:
