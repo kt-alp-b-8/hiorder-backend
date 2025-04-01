@@ -1,14 +1,12 @@
 {
   "name": "ocr-service",
   "version": "1.0.0",
-  "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "axios": "^1.8.4",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "http-server": "^14.1.1"
+    "express": "^4.21.2"
   }
 }

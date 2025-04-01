@@ -1,20 +1,19 @@
+# Node.js 기반 이미지 사용
 FROM node:18
 
+# 작업 디렉토리 생성
 WORKDIR /app
 
-# 메인 패키지 설치
+# 의존성 설치
 COPY package*.json ./
-RUN npm install -g http-server
+RUN npm install
 
-# 전체 복사
+# 모든 파일 복사
 COPY . .
 
-# 각각 의존성 설치
-RUN cd proxy-server && npm install
-RUN cd auth-status-server && npm install
+# HTTPS 통신 위해 포트 3000 (프록시), 3002 (인증 상태 관리) 오픈
+EXPOSE 3000
+EXPOSE 3002
 
-# 실행
-CMD http-server -p 8080 --cors -a 0.0.0.0 --ssl --cert localhost2.pem --key localhost2-key.pem & \
-    node proxy-server/server.js & \
-    node auth-status-server/server.js && \
-    wait
+# 서버 실행
+CMD ["node", "server.js"]
