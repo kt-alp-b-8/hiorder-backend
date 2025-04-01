@@ -1,0 +1,12 @@
+server:
+  port: 3000
+
+ssl:
+  cert: ${SSL_CERT_BASE64}
+  key: ${SSL_KEY_BASE64}
+
+spring:
+  main:
+    web-application-type: servlet
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

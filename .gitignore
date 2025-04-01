@@ -18,5 +18,3 @@ order-service/src/main/resources/application-local.yml
 restaurant-service/src/main/resources/application-local.yml
 payment-service/src/main/resources/application-local.yml
 
-#.pem
-*.pem
