@@ -21,12 +21,12 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime modifiedTime;
+    private LocalDateTime updatedAt;
 
     public void updateCreatedTime(LocalDateTime time){
-        this.createdTime = time;
+        this.createdAt = time;
     }
 }
