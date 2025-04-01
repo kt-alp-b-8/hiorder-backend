@@ -1,0 +1,28 @@
+<!-- resources/static/ocr/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>하이오더 본인인증</title>
+</head>
+<body>
+<h1>신분증 촬영</h1>
+
+<video id="video" autoplay playsinline></video>
+<img id="capturedImage" style="display:none;" />
+<canvas id="canvas" style="display:none;"></canvas>
+
+<div>
+  <button id="captureButton">촬영</button>
+  <button id="retakeButton" style="display:none;">다시</button>
+  <button id="nextCaptureButton" style="display:none;">다음</button>
+  <button id="completeButton" style="display:none;">완료</button>
+</div>
+
+<div id="result"></div>
+<div id="loading" style="display:none;">로딩중...</div>
+
+<script src="app.js"></script>
+</body>
+</html>

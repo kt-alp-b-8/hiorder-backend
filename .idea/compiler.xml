@@ -11,6 +11,7 @@
         <module name="hiorder-backend.payment-service.main" />
         <module name="hiorder-backend.order-service.main" />
         <module name="hiorder-backend.restaurant-service.main" />
+        <module name="hiorder-backend.ocr-service.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
