@@ -165,7 +165,7 @@ jobs:
       - name: 🚀 Deploy OCR
         run: |
           kubectl apply -f ./k8s/ocr-deployment.yaml
-          kubectl set image deployment/ocr-deployment ocr=team08registry.azurecr.io/$OCR_IMAGE_TAG
+          kubectl set image deployment/ocr-deployment ocr=team08registry.azurecr.io/ocr-service:${{ github.sha }}
 
   apply-ingress:
     needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr]
