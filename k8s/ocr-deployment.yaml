@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-deployment
+  labels:
+    app: ocr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ocr
+  template:
+    metadata:
+      labels:
+        app: ocr
+    spec:
+      containers:
+        - name: ocr
+          image: team08registry.azurecr.io/ocr-service
+          ports:
+            - containerPort: 8080
+            - containerPort: 3000
+          volumeMounts:
+            - name: certs
+              mountPath: /app/node
+      volumes:
+        - name: certs
+          secret:
+            secretName: ocr-certificates
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ocr-service
+spec:
+  type: ClusterIP
+  selector:
+    app: ocr
+  ports:
+    - name: spring
+      port: 8080
+      targetPort: 8080
+    - name: node
+      port: 3000
+      targetPort: 3000
