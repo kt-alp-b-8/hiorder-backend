@@ -3,9 +3,12 @@ FROM node:18
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install -g http-server pm2 && npm install
+RUN npm install -g http-server && npm install
 
 COPY . .
-COPY config/pm2.config.js ./config/
 
-CMD ["pm2-runtime", "config/pm2.config.js"]
+# 인증서 포함되게 Docker Secret mount 주의
+COPY start.sh ./start.sh
+RUN chmod +x ./start.sh
+
+CMD ["./start.sh"]
