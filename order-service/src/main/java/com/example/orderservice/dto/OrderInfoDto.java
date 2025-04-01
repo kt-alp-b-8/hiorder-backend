@@ -1,7 +1,6 @@
 package com.example.orderservice.dto;
 
 import com.example.orderservice.entity.Order;
-import com.example.orderservice.entity.OrderItem;
 import com.example.orderservice.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +31,7 @@ public class OrderInfoDto {
                 .orderCode(order.getOrderCode())
                 .tableId(order.getTableId())
                 .orderTable(order.getOrderTableName())
-                .createdAt(order.getCreatedTime())
+                .createdAt(order.getCreatedAt())
                 .orderStatus(order.getOrderStatus())
                 .totalAmount(order.getTotalAmount())
                 .items(items)
