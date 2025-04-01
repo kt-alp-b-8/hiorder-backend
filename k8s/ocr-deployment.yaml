@@ -16,19 +16,9 @@ spec:
     spec:
       containers:
         - name: ocr
-          image: team08registry.azurecr.io/ocr-service  # 자동으로 sha 태그 붙여서 배포되니까 그대로 사용
+          image: team08registry.azurecr.io/ocr-service  # 자동으로 sha 태그 붙여서 배포됨
           ports:
-            - containerPort: 8080  # QR 페이지
-            - containerPort: 3000  # OCR 프록시
-            - containerPort: 3002  # 🔥 인증 상태 서버 (추가!)
-          volumeMounts:
-            - name: certs
-              mountPath: /app
-      volumes:
-        - name: certs
-          secret:
-            secretName: ocr-certificates
-
+            - containerPort: 8080  # Spring Boot 포트 (정적 파일 + API 모두 포함됨)
 ---
 apiVersion: v1
 kind: Service
@@ -39,12 +29,6 @@ spec:
   selector:
     app: ocr
   ports:
-    - name: qr
-      port: 8080
+    - name: http
+      port: 80
       targetPort: 8080
-    - name: proxy
-      port: 3000
-      targetPort: 3000
-    - name: auth
-      port: 3002     # 🔥 인증 상태 서버용 포트 추가
-      targetPort: 3002
