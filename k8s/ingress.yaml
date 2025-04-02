@@ -2,12 +2,20 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true" # HTTP ➝ HTTPS 자동 리디렉션
 spec:
   ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - 20.249.70.136     # 외부IP
+      secretName: ip-tls-secret  # Secret 이름
+
   rules:
-    - http:
+    - host: 20.249.70.136
+      http:
         paths:
-          # 테스트용 -> 삭제 금지
           - path: /producer
             pathType: Prefix
             backend:
@@ -22,7 +30,6 @@ spec:
                 name: consumer-service
                 port:
                   number: 80
-          # 실서비스용
           - path: /order
             pathType: Prefix
             backend:
