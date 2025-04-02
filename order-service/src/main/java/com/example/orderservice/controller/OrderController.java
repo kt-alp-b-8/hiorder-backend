@@ -23,7 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = "http://localhost:5173",
+        methods = {RequestMethod.OPTIONS, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+)
 @Slf4j
 @Tag(name = "주문 API")
 public class OrderController {
@@ -53,9 +57,9 @@ public class OrderController {
                             value = "{\"code\":404, \"message\":\"주문 정보를 찾을 수 없습니다\"\"}")}
             ))
     })
-    @PutMapping("/{restaurantId}/table/{tableId}/orders/changeStatus")
+    @PutMapping("/{restaurantId}/table/{tableId}/order/changeStatus")
     public ApiResult<?> changeOrderStatus(@PathVariable("restaurantId") Long restaurantId,
-                                               @PathVariable("tableId") Long tableId) {
+                                          @PathVariable("tableId") Long tableId) {
 
         return ApiResult.ok(HttpStatus.OK, orderService.changeOrderStatus(restaurantId, tableId));
     }
