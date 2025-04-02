@@ -131,7 +131,7 @@
     // 인증된 사용자 수를 가져오는 함수
     async function fetchAuthCount() {
         try {
-            const response = await fetch("/api/auth/count");  // ← 수정됨!
+            const response = await fetch("/ocr/api/auth/count");  // ← 수정됨!
             const data = await response.json();
             const authCountElement = document.getElementById("auth-count");
             if (data.count > 0) {
