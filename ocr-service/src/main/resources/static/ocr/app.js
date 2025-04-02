@@ -129,40 +129,63 @@ async function sendToClova(imageBase64) {
 
 function extractInformationFromResponse(response) {
     try {
-        const result = response?.images?.[0]?.idCard?.result;
-        if (!result) return null;
+        console.log("👀 Clova 응답 원본:", response);
+
+        const image = response?.images?.[0];
+        if (!image) {
+            console.warn("❌ 이미지 데이터 없음");
+            return null;
+        }
+
+        const idCard = image.idCard;
+        if (!idCard) {
+            console.warn("❌ idCard 필드 없음");
+            return null;
+        }
+
+        const result = idCard.result;
+        if (!result) {
+            console.warn("❌ idCard.result 없음");
+            return null;
+        }
 
         const idInfo = {};
 
         if (result.dl) {
             const dl = result.dl;
             idInfo.type = "Driver's License";
-            idInfo.name = dl.name?.[0]?.text || "정보 없음";
-            idInfo.rrn = dl.personalNum?.[0]?.text || "정보 없음";
-            idInfo.address = dl.address?.[0]?.text || "정보 없음";
-            idInfo.issueDate = dl.issueDate?.[0]?.text || "정보 없음";
-            idInfo.licenseNum = dl.num?.[0]?.text || "정보 없음";
-            idInfo.renewStartDate = dl.renewStartDate?.[0]?.text || "정보 없음";
-            idInfo.renewEndDate = dl.renewEndDate?.[0]?.text || "정보 없음";
-            idInfo.condition = dl.condition?.[0]?.text || "정보 없음";
+            idInfo.name = dl.name?.[0]?.text ?? "정보 없음";
+            idInfo.rrn = dl.personalNum?.[0]?.text ?? "정보 없음";
+            idInfo.address = dl.address?.[0]?.text ?? "정보 없음";
+            idInfo.issueDate = dl.issueDate?.[0]?.text ?? "정보 없음";
+            idInfo.licenseNum = dl.num?.[0]?.text ?? "정보 없음";
+            idInfo.renewStartDate = dl.renewStartDate?.[0]?.text ?? "정보 없음";
+            idInfo.renewEndDate = dl.renewEndDate?.[0]?.text ?? "정보 없음";
+            idInfo.condition = dl.condition?.[0]?.text ?? "정보 없음";
         } else if (result.ic) {
             const ic = result.ic;
             idInfo.type = "ID Card";
-            idInfo.name = ic.name?.[0]?.text || "정보 없음";
-            idInfo.rrn = ic.personalNum?.[0]?.text || "정보 없음";
-            idInfo.address = ic.address?.[0]?.text || "정보 없음";
-            idInfo.issueDate = ic.issueDate?.[0]?.text || "정보 없음";
+            idInfo.name = ic.name?.[0]?.text ?? "정보 없음";
+            idInfo.rrn = ic.personalNum?.[0]?.text ?? "정보 없음";
+            idInfo.address = ic.address?.[0]?.text ?? "정보 없음";
+            idInfo.issueDate = ic.issueDate?.[0]?.text ?? "정보 없음";
         } else {
+            console.warn("❌ dl / ic 둘 다 없음. result: ", result);
             return null;
         }
 
+        // 마스킹
         idInfo.rrn = maskRRN(idInfo.rrn);
+
+        console.log("✅ 추출된 신분증 정보:", idInfo);
         return idInfo;
+
     } catch (error) {
-        console.error("OCR 파싱 오류:", error);
+        console.error("❌ OCR 응답 파싱 중 오류:", error);
         return null;
     }
 }
+
 
 function resetOCRState() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
