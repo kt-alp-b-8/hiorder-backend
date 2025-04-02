@@ -240,10 +240,10 @@ public class RestaurantService {
         //    여기서는 sortParam="table_id"인 경우만 구현 (확장 가능)
         List<RestaurantTable> tables;
         if ("table_id".equalsIgnoreCase(sortParam)) {
-            tables = restaurantTableRepository.findByRestaurantIdOrderByTableIdAsc(restaurantId);
+            tables = restaurantTableRepository.findAllByRestaurantIdOrderByIdAsc(restaurantId);
         } else {
             // fallback: 그냥 table_id asc
-            tables = restaurantTableRepository.findByRestaurantIdOrderByTableIdAsc(restaurantId);
+            tables = restaurantTableRepository.findAllByRestaurantIdOrderByIdAsc(restaurantId);
         }
 
         // 3) DTO 변환
