@@ -11,8 +11,8 @@ const capturedImage = document.getElementById("capturedImage");
 const ctx = canvas.getContext("2d");
 
 const BASE_URL = "https://team08.kro.kr/ocr";
-const PROXY_URL = `${BASE_URL}/ocr/api/ocr`;
-const INCREMENT_URL = `${BASE_URL}/increment`;
+const PROXY_URL = "https://team08.kro.kr/api/ocr";
+const INCREMENT_URL = `https://team08.kro.kr/api/auth/increment`;
 
 let capturedImages = [];
 let isScreenDark = false;
