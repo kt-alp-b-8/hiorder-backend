@@ -22,10 +22,12 @@ public class PaymentService {
     @Transactional
     public void createPayment(PaymentCreateRequest paymentCreateRequest) {
 
+        System.out.println("PaymentService - Create Payment 호출");
+
         Payment payment = paymentCreateRequest.toEntity();
         paymentRepository.save(payment);
 
-        if(!payment.getStatus().equals("paid")){     // 결제 실패 -> 보상 트랜잭션 수행
+        if(!payment.isSuccess()){     // 결제 실패 -> 보상 트랜잭션 수행
             applicationEventPublisher.publishEvent(PaymentFailedEvent.of(payment.getOrderIds()));
         }
     }

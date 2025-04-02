@@ -18,7 +18,7 @@ public class PaymentCreateRequest {
 
     private Long tableId;               // 연관된 테이블 PK
 
-    private String status;              // 결제 상태
+    private boolean isSuccess;              // 결제 상태
 
     private String paymentKey;          // 결제 식별자 (토스 페이먼츠)
 
@@ -26,7 +26,7 @@ public class PaymentCreateRequest {
         return Payment.builder()
                 .orderIds(orderIds)
                 .tableId(tableId)
-                .status(status)
+                .isSuccess(isSuccess)
                 .paymentKey(paymentKey)
                 .build();
     }
