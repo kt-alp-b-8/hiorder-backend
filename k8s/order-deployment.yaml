@@ -39,7 +39,10 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: dev
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secret
+                  key: KAFKA_BOOTSTRAP_SERVERS
             - name: KAFKA_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
