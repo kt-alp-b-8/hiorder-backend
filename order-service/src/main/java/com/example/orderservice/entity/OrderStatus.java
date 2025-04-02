@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    IN_PROGRESS("주문 진행중"), COMPLETED("주문 완료");
+    IN_PROGRESS("주문 진행중"),
+    COMPLETED("결제 완료");
 
     private String name;
 

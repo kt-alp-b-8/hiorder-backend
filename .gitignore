@@ -4,6 +4,16 @@
 **/build/
 order-service/build/
 restaurant-service/build/
+payment-service/build/
+ocr-service/build/
+
+order-service/out/
+restaurant-service/out/
+payment-service/out/
+ocr-service/out/
+
+common-event/out/
+
 
 # IDE
 *.iml
@@ -17,4 +27,4 @@ restaurant-service/build/
 order-service/src/main/resources/application-local.yml
 restaurant-service/src/main/resources/application-local.yml
 payment-service/src/main/resources/application-local.yml
-
+ocr-service/src/main/resources/application-local.yml

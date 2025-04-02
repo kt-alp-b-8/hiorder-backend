@@ -1,12 +1,13 @@
 package com.example.paymentservice.controller;
 
+import com.example.paymentservice.controller.api.ApiResult;
+import com.example.paymentservice.dto.request.PaymentCreateRequest;
 import com.example.paymentservice.service.PaymentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/payment")
@@ -17,4 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final PaymentService paymentService;
+
+    @PostMapping("")
+    public ApiResult<?> createPayment(@RequestBody PaymentCreateRequest paymentCreateRequest) {
+
+        paymentService.createPayment(paymentCreateRequest);
+
+        return ApiResult.ok(HttpStatus.CREATED);
+    }
 }

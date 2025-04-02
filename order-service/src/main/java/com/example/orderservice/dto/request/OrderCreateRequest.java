@@ -15,6 +15,7 @@ public class OrderCreateRequest {
     private String orderTable;
     private List<OrderItemRequestDto> orderItemRequestDtos;
     private long totalAmount; // ex) 26000
+    private int peopleCount;
 
     public Order toEntity(OrderStatus initOrderStatus, Long restaurantId, Long tableId, int orderCode) {
         return Order.builder()
@@ -24,6 +25,7 @@ public class OrderCreateRequest {
                 .orderTableName(orderTable)
                 .restaurantId(restaurantId)
                 .tableId(tableId)
+                .peopleCount(peopleCount)
                 .build();
     }
 }

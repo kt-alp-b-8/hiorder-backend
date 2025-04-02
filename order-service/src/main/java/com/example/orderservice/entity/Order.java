@@ -39,14 +39,17 @@ public class Order extends BaseEntity {
     @Column(name = "table_id", nullable = false)
     private Long tableId;                               // 기존 다대일 -> msa 에서는 PK만 갖도록 변경
 
+    private int peopleCount;
+
     @Builder
-    public Order(OrderStatus orderStatus, long totalAmount, Integer orderCode, String orderTableName, Long restaurantId, Long tableId) {
+    public Order(OrderStatus orderStatus, long totalAmount, Integer orderCode, String orderTableName, Long restaurantId, Long tableId, int peopleCount) {
         this.orderStatus = orderStatus;
         this.totalAmount = totalAmount;
         this.orderCode = orderCode;
         this.orderTableName = orderTableName;
         this.restaurantId = restaurantId;
         this.tableId = tableId;
+        this.peopleCount = peopleCount;
     }
 
     //== 비지니스 로직 ==//
