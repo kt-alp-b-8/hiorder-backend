@@ -59,7 +59,7 @@ public class RestaurantController {
         return ApiResult.ok(HttpStatus.OK, restaurantService.getMenuCategories(restaurantId, sortParam));
     }
 
-    @Operation(summary = "식당 카테고리 정보 조회", description = "식당의 특정 카테고리 하위 메뉴 정보를 조회한다.")
+    @Operation(summary = "식당 메뉴 정보 조회", description = "식당의 특정 카테고리 하위 메뉴 정보를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "식당의 특정 카테고리 하위 메뉴가 조회된다.",
                     content = @Content(schema = @Schema(implementation = RestaurantInfoResponse.class))),

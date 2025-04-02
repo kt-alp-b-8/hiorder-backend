@@ -9,13 +9,14 @@ import com.example.orderservice.entity.OrderItem;
 import com.example.orderservice.entity.OrderStatus;
 import com.example.orderservice.exception.CustomException;
 import com.example.orderservice.exception.ErrorCode;
+import com.example.orderservice.kafka.event.OrdersReadyForPaymentEvent;
 import com.example.orderservice.repository.OrderItemRepository;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.orderservice.entity.Order;
-import com.example.orderservice.entity.OrderStatus;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+
     /**
      * 주문 상태 변경
      * @param restaurantId
@@ -39,10 +43,6 @@ public class OrderService {
     @Transactional
     public OrderStatusChangeResponse changeOrderStatus(Long restaurantId, Long tableId) {
         // 1) 식당, 테이블 존재 여부
-//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-//                .orElseThrow(() -> new RuntimeException("해당 식당을 찾을 수 없습니다."));
-//        RestaurantTables restaurantTables = restaurantTablesRepository.findById(tableId)
-//                .orElseThrow(() -> new RuntimeException("해당 테이블을 찾을 수 없습니다."));
 
         // 2) IN_PROGRESS 주문 목록 조회
         List<Order> pendingOrders = orderRepository.findAllByRestaurantAndTableAndStatus(
@@ -52,15 +52,33 @@ public class OrderService {
             throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
         }
 
-        // 3) 주문 상태값 PENDING -> PAID 로 변경
+        // 3) 주문 상태값 IN_PROGRESS -> COMPLETED 로 변경
         List<Long> updatedIds = new ArrayList<>();
         for (Order o : pendingOrders) {
             o.changeOrderStatus(OrderStatus.COMPLETED);
             updatedIds.add(o.getId());
         }
 
+        // 총 금액 계산
+        long totalAmount = pendingOrders.stream()
+                .mapToLong(Order::getTotalAmount)
+                .sum();
+
+        // 이벤트 생성 & 발행
+        applicationEventPublisher.publishEvent(OrdersReadyForPaymentEvent.of(updatedIds));
+
         // 4) 응답 DTO
-        return OrderStatusChangeResponse.of(updatedIds.size(), updatedIds);
+        return OrderStatusChangeResponse.of(updatedIds.size(), updatedIds, totalAmount);
+    }
+
+    @Transactional
+    public void changeOrderStatusToInProgress(List<Long> orderIds) {
+
+        List<Order> orders = orderRepository.findAllById(orderIds);
+
+        for (Order o : orders) {
+            o.changeOrderStatus(OrderStatus.IN_PROGRESS);
+        }
     }
 
     /**
