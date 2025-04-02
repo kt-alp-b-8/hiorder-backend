@@ -15,11 +15,15 @@ public interface RestaurantTableRepository extends JpaRepository<RestaurantTable
 //    Optional<RestaurantTable> findByRestaurant_RestaurantIdAndTableName(Long restaurantId, String tableName);
 
     // 특정 식당의 테이블 목록, table_id 기준 오름차순
-    @Query(value = "SELECT * FROM restaurant_table t " +
-            "WHERE t.restaurant_id = :restaurantId " +
-            "ORDER BY t.table_id ASC",
-            nativeQuery = true)
-    List<RestaurantTable> findByRestaurantIdOrderByTableIdAsc(@Param("restaurantId") Long restaurantId);
+//    @Query(value = "SELECT * FROM restaurant_table t " +
+//            "WHERE t.restaurant_id = :restaurantId " +
+//            "ORDER BY t.table_id ASC",
+//            nativeQuery = true)
+    @Query("SELECT t FROM RestaurantTable t " +
+            "WHERE t.restaurant.id = :restaurantId " +
+            "ORDER BY t.id ASC")
+    List<RestaurantTable> findAllByRestaurantIdOrderByIdAsc(@Param("restaurantId") Long restaurantId);
+//    List<RestaurantTable> findByRestaurantIdOrderByTableIdAsc(@Param("restaurantId") Long restaurantId);
 
 
     Optional<RestaurantTable> findRestaurantTableByRestaurantAndTableName(Restaurant restaurant, String tableName);
