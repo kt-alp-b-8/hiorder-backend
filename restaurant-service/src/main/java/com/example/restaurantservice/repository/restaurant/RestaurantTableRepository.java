@@ -15,7 +15,7 @@ public interface RestaurantTableRepository extends JpaRepository<RestaurantTable
 //    Optional<RestaurantTable> findByRestaurant_RestaurantIdAndTableName(Long restaurantId, String tableName);
 
     // 특정 식당의 테이블 목록, table_id 기준 오름차순
-    @Query(value = "SELECT * FROM restaurant_tables t " +
+    @Query(value = "SELECT * FROM restaurant_table t " +
             "WHERE t.restaurant_id = :restaurantId " +
             "ORDER BY t.table_id ASC",
             nativeQuery = true)
