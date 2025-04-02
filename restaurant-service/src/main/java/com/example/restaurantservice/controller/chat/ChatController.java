@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/owner/chat")
+@RequestMapping("/restaurant/owner/chat")
 @RequiredArgsConstructor
 public class ChatController {
 
