@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewForwardController {
 
-    @GetMapping("/ocr/qr")
+    @GetMapping("/ocr/page/qr")
     public String showQrPage() {
-        return "forward:/ocr/qr.html";
+        return "forward:/ocr/page/qr.html";
     }
 
-    @GetMapping("/ocr/index")
+    @GetMapping("/ocr/page/index")
     public String showIndexPage() {
-        return "forward:/ocr/index.html";
+        return "forward:/ocr/page/index.html";
     }
 }
