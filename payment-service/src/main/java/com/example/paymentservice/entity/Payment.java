@@ -26,15 +26,15 @@ public class Payment extends BaseEntity {
     private Long tableId;               // 연관된 테이블 PK
 
 //    private Status status;              // 결제 상태
-    private String status;
+    private boolean isSuccess;
 
     private String paymentKey;          // 결제 식별자 (토스 페이먼츠)
 
     @Builder
-    public Payment(List<Long> orderIds, Long tableId, String status, String paymentKey) {
+    public Payment(List<Long> orderIds, Long tableId, boolean isSuccess, String paymentKey) {
         this.orderIds = orderIds;
         this.tableId = tableId;
-        this.status = status;
+        this.isSuccess = isSuccess;
         this.paymentKey = paymentKey;
     }
 }
