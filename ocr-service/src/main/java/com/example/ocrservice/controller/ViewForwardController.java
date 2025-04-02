@@ -8,11 +8,11 @@ public class ViewForwardController {
 
     @GetMapping("/ocr/page/qr")
     public String showQrPage() {
-        return "forward:/ocr/page/qr.html";
+        return "redirect:/ocr/page/qr.html";
     }
 
     @GetMapping("/ocr/page/index")
     public String showIndexPage() {
-        return "forward:/ocr/page/index.html";
+        return "redirect:/ocr/page/index.html";
     }
 }
