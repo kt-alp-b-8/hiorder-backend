@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/ocr")
+@RequestMapping("/ocr/api/ocr")
 @RequiredArgsConstructor
 public class OcrApiController {
 
