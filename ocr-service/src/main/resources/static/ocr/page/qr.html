@@ -60,6 +60,23 @@
             color: #666;
             text-decoration: none;
         }
+        #auth-count, #total-count {
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        #auth-count {
+            color: #0066cc;
+            background-color: #f0f7ff;
+            border: 2px solid #0066cc;
+        }
+        #total-count {
+            color: #444;
+            background-color: #f8f8f8;
+            border: 2px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -71,19 +88,11 @@
         신분증 인증을 진행해주세요
     </p>
     <p id="ip-address"></p>
-    <div
-            id="auth-count"
-            style="
-          font-size: 1.5rem;
-          color: #0066cc;
-          margin: 1.5rem 0;
-          padding: 1rem;
-          background-color: #f0f7ff;
-          border-radius: 8px;
-          font-weight: bold;
-          border: 2px solid #0066cc;
-        "
-    ></div>
+
+    <!-- 총 인원 수와 인증 완료 수 표시 -->
+    <div id="total-count" style="display: none;"></div>
+    <div id="auth-count" style="display: none;"></div>
+
     <p id="error-message">
         QR 코드 생성에 실패했습니다. 페이지를 새로고침해주세요.
     </p>
@@ -128,10 +137,9 @@
         }
     }
 
-    // 인증된 사용자 수를 가져오는 함수
     async function fetchAuthCount() {
         try {
-            const response = await fetch("/ocr/api/auth/count");  // ← 수정됨!
+            const response = await fetch("/ocr/api/auth/count");
             const data = await response.json();
             const authCountElement = document.getElementById("auth-count");
             if (data.count > 0) {
@@ -145,17 +153,21 @@
         }
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-            generateQR();
-            fetchAuthCount();
-            setInterval(fetchAuthCount, 3000);
-        });
-    } else {
+    document.addEventListener("DOMContentLoaded", () => {
         generateQR();
         fetchAuthCount();
         setInterval(fetchAuthCount, 3000);
-    }
+
+        // URL 파라미터에서 count 값 가져오기
+        const params = new URLSearchParams(window.location.search);
+        const count = params.get("count");
+
+        if (count) {
+            const totalCountElement = document.getElementById("total-count");
+            totalCountElement.textContent = `총 ${count}명 본인인증이 필요합니다.`;
+            totalCountElement.style.display = "block";
+        }
+    });
 </script>
 </body>
 </html>

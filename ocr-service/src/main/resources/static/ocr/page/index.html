@@ -13,8 +13,10 @@
       margin: 0 auto;
       padding: 20px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #00b8a9;
     }
     .camera-container {
       position: relative;
@@ -40,10 +42,9 @@
       transform: translate(-50%, -50%);
       width: 80%;
       height: 60px;
-      border: 2px solid red;
-      box-sizing: border-box;
-      pointer-events: none;
+      border: 2px solid #00b8a9;
       border-radius: 5px;
+      pointer-events: none;
     }
     .guide-text {
       position: absolute;
@@ -69,7 +70,7 @@
       padding: 10px 15px;
       border: none;
       border-radius: 5px;
-      background-color: #f44336;
+      background-color: #00b8a9;
       color: white;
       font-weight: bold;
       cursor: pointer;
@@ -77,10 +78,10 @@
       min-width: 120px;
     }
     button:hover {
-      background-color: #e53935;
+      background-color: #009288;
     }
     #brightnessButton {
-      background-color: #555;
+      background-color: #666;
     }
     #retakeButton,
     #nextCaptureButton,
@@ -91,6 +92,7 @@
       margin: 20px 0;
       font-weight: bold;
       display: none;
+      color: #0066cc;
     }
     #result {
       margin-top: 20px;
@@ -110,13 +112,13 @@
       line-height: 1.5;
     }
     .result-container strong {
-      color: #0066cc;
+      color: #00b8a9;
     }
     .error-message {
       color: #d9534f;
       font-weight: bold;
       padding: 10px;
-      background-color: #f2dede;
+      background-color: #fff3f3;
       border-radius: 4px;
     }
     .tips {
@@ -128,6 +130,7 @@
     }
     .tips h3 {
       margin-top: 0;
+      color: #333;
     }
     @media (max-width: 600px) {
       .camera-container {
@@ -154,9 +157,9 @@
 
 <div class="btn-container">
   <button id="captureButton">촬영</button>
-  <button id="retakeButton" style="display: none">다시 촬영</button>
-  <button id="nextCaptureButton" style="display: none">다음 촬영</button>
-  <button id="completeButton" style="display: none">완료</button>
+  <button id="retakeButton">다시 촬영</button>
+  <button id="nextCaptureButton">다음 촬영</button>
+  <button id="completeButton">완료</button>
   <button id="brightnessButton">화면 어둡게</button>
 </div>
 
@@ -170,7 +173,7 @@
   <h3>인식이 잘 안될 경우 팁:</h3>
   <ul>
     <li>직접적인 광원을 피해주세요.</li>
-    <li>"화면 어둡게" 버튼을 눌러 화면을 어둡게 만들어보세요.</li>
+    <li>"화면 어둡게" 버튼을 눌러보세요.</li>
     <li>신분증을 약간 기울여 반사를 줄여보세요.</li>
     <li>어두운 배경 위에 신분증을 올려놓고 촬영해보세요.</li>
   </ul>
