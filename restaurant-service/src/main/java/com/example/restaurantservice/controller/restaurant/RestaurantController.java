@@ -55,9 +55,10 @@ public class RestaurantController {
     })
     @GetMapping("/{restaurantId}/category")
     public ApiResult<?> getRestaurantCategories(@PathVariable("restaurantId") Long restaurantId,
-                                                @RequestParam(name = "sort", required = false) String sortParam) {
+                                                @RequestParam(name = "sort", required = false) String sortParam,
+                                                @RequestParam(name = "lang", required = false, defaultValue = "kr") String lang) {
 
-        return ApiResult.ok(HttpStatus.OK, restaurantService.getMenuCategories(restaurantId, sortParam));
+        return ApiResult.ok(HttpStatus.OK, restaurantService.getMenuCategoriesByLang(restaurantId, sortParam, lang));
     }
 
     @Operation(summary = "식당 메뉴 정보 조회", description = "식당의 특정 카테고리 하위 메뉴 정보를 조회한다.")
@@ -72,9 +73,10 @@ public class RestaurantController {
     @GetMapping("/{restaurantId}/category/{menuCategoryId}/menu")
     public ApiResult<?> getRestaurantMenus(@PathVariable("restaurantId") Long restaurantId,
                                            @PathVariable("menuCategoryId") Long menuCategoryId,
-                                           @RequestParam(name = "sort", required = false) String sortParam) {
+                                           @RequestParam(name = "sort", required = false) String sortParam,
+                                           @RequestParam(name = "lang", required = false, defaultValue = "kr") String lang) {
 
-        return ApiResult.ok(HttpStatus.OK, restaurantService.getMenuList(restaurantId, menuCategoryId, sortParam));
+        return ApiResult.ok(HttpStatus.OK, restaurantService.getMenuListByLang(restaurantId, menuCategoryId, sortParam, lang));
     }
 
     @Operation(summary = "식당의 테이블 정보 조회", description = "식당의 모든 테이블 정보를 조회한다.")
