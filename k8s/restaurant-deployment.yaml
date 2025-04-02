@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: openai-secret
                   key: OPENAI_API_KEY
+            - name: OPENAI_RESPONSE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: OPENAI_RESPONSE_API_KEY
 ---
 apiVersion: v1
 kind: Service

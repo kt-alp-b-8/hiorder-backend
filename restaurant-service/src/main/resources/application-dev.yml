@@ -40,9 +40,15 @@ spring:
         password="${KAFKA_CONNECTION_STRING}";
 
 openai:
+  response:
+    api:
+      key: ${OPENAI_RESPONSE_API_KEY}
+    url: 'https://api.openai.com/v1/responses'
+
   api:
     key: ${OPENAI_API_KEY}
   url: 'https://api.openai.com/v1/chat/completions'
+
 
 springdoc:
   api-docs:

@@ -118,6 +118,7 @@ jobs:
         run: |
           kubectl create secret generic openai-secret \
             --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            --from-literal=OPENAI_RESPONSE_API_KEY="${{ secrets.OPENAI_RESPONSE_API_KEY }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: 🚰️ Deploy Restaurant
