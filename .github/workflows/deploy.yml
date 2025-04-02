@@ -210,7 +210,7 @@ jobs:
           kubectl set image deployment/payment-deployment payment=team08registry.azurecr.io/$PAYMENT_IMAGE_TAG
 
   apply-ingress:
-    needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr, build-deploy-payment ]
+    needs: [build-deploy-restaurant, build-deploy-ocr]
     runs-on: ubuntu-latest
     steps:
       - name: 📅 Checkout code
