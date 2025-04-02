@@ -12,12 +12,10 @@
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/**")
-////                .allowedOrigins("http://localhost:5173")
-//                .allowedOriginPatterns("*")
+//                .allowedOriginPatterns("http://**", "https://**", "ws://**")
 //                .allowCredentials(true)
 //                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH")
-//                .allowedHeaders("*")
-//                .maxAge(3600);
+//                .allowedHeaders("*");
 //
 //        WebMvcConfigurer.super.addCorsMappings(registry);
 //    }

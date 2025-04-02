@@ -90,7 +90,9 @@ public class RestaurantController {
     })
     @GetMapping("/{restaurantId}/table")
     public ApiResult<?> getRestaurantTables(@PathVariable("restaurantId") Long restaurantId,
-                                                 @RequestParam(name="sort", required=false, defaultValue="table_id") String sortParam) {
+                                            @RequestParam(name="sort", required=false, defaultValue="table_id") String sortParam) {
+
+        System.out.println("여기 통과");
 
         return ApiResult.ok(HttpStatus.OK, restaurantService.getTableList(restaurantId, sortParam));
 
