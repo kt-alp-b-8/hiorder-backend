@@ -123,7 +123,7 @@ public class OrderService {
                 .map(OrderItemResponseDto::of)
                 .collect(Collectors.toList());  // List로 수집
 
-        return OrderCreateResponse.of(order, orderItemResponseDtos);
+        return OrderCreateResponse.of(savedOrder, orderItemResponseDtos);
     }
 
     /**
