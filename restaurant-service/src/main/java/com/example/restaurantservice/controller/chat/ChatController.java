@@ -14,7 +14,7 @@ import com.example.restaurantservice.service.chat.ChatBotService;
 
 import lombok.RequiredArgsConstructor;
 
-//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/restaurant/owner/chat")
 @RequiredArgsConstructor
