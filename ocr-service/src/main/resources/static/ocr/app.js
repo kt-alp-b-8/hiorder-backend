@@ -10,7 +10,7 @@ const loadingDiv = document.getElementById("loading");
 const capturedImage = document.getElementById("capturedImage");
 const ctx = canvas.getContext("2d");
 
-const BASE_URL = "http://20.249.70.136/ocr";
+const BASE_URL = "https://team08.kro.kr/ocr";
 const PROXY_URL = `${BASE_URL}/ocr/api/ocr`;
 const INCREMENT_URL = `${BASE_URL}/increment`;
 
