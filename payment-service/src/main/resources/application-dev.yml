@@ -34,7 +34,7 @@ spring:
     properties:
       security.protocol: SASL_SSL
       sasl.mechanism: PLAIN
-      sasl.jaas.config: >
+      sasl.jaas.config: |
         org.apache.kafka.common.security.plain.PlainLoginModule required
         username="$ConnectionString"
         password="${KAFKA_CONNECTION_STRING}";
