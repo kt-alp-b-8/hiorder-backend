@@ -5,6 +5,9 @@
 order-service/build/
 restaurant-service/build/
 payment-service/build/
+order-service/out/
+restaurant-service/out/
+payment-service/out/
 
 # IDE
 *.iml
