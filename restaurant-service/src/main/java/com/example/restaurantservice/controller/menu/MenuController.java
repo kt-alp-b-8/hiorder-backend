@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/restaurant")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = "http://localhost:5173",
+        methods = {RequestMethod.OPTIONS, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+)
 @Slf4j
 @Tag(name = "메뉴 API")
 public class MenuController {
