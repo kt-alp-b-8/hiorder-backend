@@ -2,12 +2,21 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # HTTP → HTTPS 리디렉션
+    # ❌ rewrite 제거함
 spec:
   ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - team08.kro.kr
+      secretName: team08-kro-kr-tls
+
   rules:
-    - http:
+    - host: team08.kro.kr
+      http:
         paths:
-          # 테스트용 -> 삭제 금지
           - path: /producer
             pathType: Prefix
             backend:
@@ -22,7 +31,6 @@ spec:
                 name: consumer-service
                 port:
                   number: 80
-          # 실서비스용
           - path: /order
             pathType: Prefix
             backend:
@@ -37,18 +45,10 @@ spec:
                 name: restaurant-service
                 port:
                   number: 80
-
-#          - path: /payment
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: payment-service
-#                port:
-#                  number: 80
-#          - path: /auth
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: keycloak
-#                port:
-#                  number: 8080
+          - path: /ocr
+            pathType: Prefix
+            backend:
+              service:
+                name: ocr-service
+                port:
+                  number: 80

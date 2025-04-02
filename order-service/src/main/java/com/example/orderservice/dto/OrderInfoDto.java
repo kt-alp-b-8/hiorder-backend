@@ -1,7 +1,6 @@
 package com.example.orderservice.dto;
 
 import com.example.orderservice.entity.Order;
-import com.example.orderservice.entity.OrderItem;
 import com.example.orderservice.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

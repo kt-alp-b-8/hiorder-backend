@@ -11,9 +11,18 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/common-event" />
+            <option value="$PROJECT_DIR$/ocr-service" />
             <option value="$PROJECT_DIR$/order-service" />
             <option value="$PROJECT_DIR$/payment-service" />
             <option value="$PROJECT_DIR$/restaurant-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/ocr-service" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/ocr-service" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />

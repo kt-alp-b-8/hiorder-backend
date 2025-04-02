@@ -1,0 +1,63 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: restaurant-service
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB        # 요청 파일 하나의 사이즈
+      max-request-size: 50MB     # 요청 전체의 사이즈
+  jmx:
+    enabled: false
+
+  datasource: # 로컬 디비 정보로 변경
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5434/hiorder
+    username: postgres
+    password: qwer1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create    # 최초에만 create, 이후에는 update 사용
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
+        default_batch_fetch_size: 100
+        format_sql: true                                    # sout으로 보기에 편안한 sql 출력
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+  kafka: # 로컬 카프카 필요 -> 지금 작동 못함
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json:
+          trusted.packages: "*"  # 모든 패키지 신뢰
+          type.mapping: |
+            test-message:com.kt.dto.request.ProducerExampleRequest
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+  url: 'https://api.openai.com/v1/chat/completions'
+
+logging:
+  level:
+    org.hibernate.SQL: info    # 하이버네이트가 생성하는 sql 로그로 출력
+    org.hibernate.orm.jdbc.bind: info    # 쿼리 파라미터 로그 남김
+    root: info
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    display-request-duration: true
+
+
