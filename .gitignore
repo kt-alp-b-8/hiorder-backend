@@ -8,6 +8,7 @@ payment-service/build/
 order-service/out/
 restaurant-service/out/
 payment-service/out/
+common-event/out/
 
 # IDE
 *.iml
