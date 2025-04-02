@@ -14,8 +14,7 @@ spec:
       secretName: team08-kro-kr-tls
 
   rules:
-    - host: team08.kro.kr
-      http:
+    - http:
         paths:
           - path: /producer
             pathType: Prefix
