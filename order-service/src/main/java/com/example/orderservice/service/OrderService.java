@@ -13,6 +13,7 @@ import com.example.orderservice.kafka.event.OrdersReadyForPaymentEvent;
 import com.example.orderservice.repository.OrderItemRepository;
 import com.example.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -90,6 +92,8 @@ public class OrderService {
      */
     @Transactional
     public OrderCreateResponse createOrder(Long restaurantId, Long tableId, OrderCreateRequest orderCreateRequest) {
+
+        log.debug("Create order 진입");
 
         // 1) 오늘 날짜 기준, 식당별 최대 orderCode 조회 → +1
         LocalDate today = LocalDate.now();
