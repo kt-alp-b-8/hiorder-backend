@@ -52,3 +52,7 @@ azure:
     account-name: team08sa
     account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
     container-name: images
+
+logging:
+  level:
+    root: DEBUG
