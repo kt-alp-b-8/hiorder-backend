@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: restaurant-deployment
+  name: payment-deployment
   labels:
-    app: restaurant
+    app: payment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: restaurant
+      app: payment
   template:
     metadata:
       labels:
-        app: restaurant
+        app: payment
     spec:
       containers:
-        - name: restaurant
-          image: team08registry.azurecr.io/restaurant-service
+        - name: payment
+          image: team08registry.azurecr.io/payment-service
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -24,17 +24,17 @@ spec:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 secretKeyRef:
-                  name: restaurant-db-secret
-                  key: DB_URL_RESTAURANT
+                  name: payment-db-secret
+                  key: DB_URL_PAYMENT
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: restaurant-db-secret
+                  name: payment-db-secret
                   key: DB_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: restaurant-db-secret
+                  name: payment-db-secret
                   key: DB_PASSWORD
             - name: SPRING_PROFILES_ACTIVE
               value: dev
@@ -59,11 +59,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: restaurant-service
+  name: payment-service
 spec:
   type: ClusterIP
   selector:
-    app: restaurant
+    app: payment
   ports:
     - port: 80
       targetPort: 8080

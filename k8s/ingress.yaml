@@ -52,3 +52,10 @@ spec:
                 name: ocr-service
                 port:
                   number: 80
+          - path: /payment
+            pathType: Prefix
+            backend:
+              service:
+                name: ocr-service
+                port:
+                  number: 80

@@ -7,7 +7,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL_payment}
+    url: ${DB_URL_PAYMENT}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 

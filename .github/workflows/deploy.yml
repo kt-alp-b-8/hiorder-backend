@@ -158,8 +158,58 @@ jobs:
           kubectl apply -f ./k8s/ocr-deployment.yaml
           kubectl set image deployment/ocr-deployment ocr=team08registry.azurecr.io/ocr-service:${{ github.sha }}
 
+  build-deploy-payment:
+    needs: setup-shared-resources
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📅 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Gradle Build - Payment
+        run: ./gradlew :payment-service:build -x test
+
+      - name: 🐳 Docker Login
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login team08registry.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: 🐳 Docker Build & Push - Payment
+        run: |
+          PAYMENT_IMAGE_TAG=payment-service:${{ github.sha }}
+          docker build -f ./payment-service/Dockerfile -t team08registry.azurecr.io/$PAYMENT_IMAGE_TAG .
+          docker push team08registry.azurecr.io/$PAYMENT_IMAGE_TAG
+          echo "PAYMENT_IMAGE_TAG=$PAYMENT_IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: 🔐 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ☘️ Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: team08
+          cluster-name: team08aks
+
+      - name: 🔐 Create Secret - Payment DB
+        run: |
+          kubectl create secret generic payment-db-secret \
+            --from-literal=DB_URL_PAYMENT="${{ secrets.DB_URL_PAYMENT }}" \
+            --from-literal=DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 🔐 Create Secret - OpenAI
+        run: |
+          kubectl create secret generic openai-secret \
+            --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: 💸 Deploy Payment
+        run: |
+          kubectl apply -f ./k8s/payment-deployment.yaml
+          kubectl set image deployment/payment-deployment payment=team08registry.azurecr.io/$PAYMENT_IMAGE_TAG
+
   apply-ingress:
-    needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr]
+    needs: [build-deploy-order, build-deploy-restaurant, build-deploy-ocr, build-deploy-payment ]
     runs-on: ubuntu-latest
     steps:
       - name: 📅 Checkout code
