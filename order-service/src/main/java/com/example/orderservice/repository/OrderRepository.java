@@ -16,11 +16,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     //      WHERE o.restaurant.id = :restaurantId
     //        AND cast(o.createdAt as date) = :today"
     @Query(value = "SELECT coalesce(MAX(o.order_code), 0) " +
-            "FROM Order o " +
+            "FROM orders o " +
             "WHERE o.restaurant_id = :restaurantId " +
             "  AND CAST(o.created_at AS date) = :today",
             nativeQuery = true)
-
     int findMaxOrderCodeToday(@Param("restaurantId") Long restaurantId,
                               @Param("today") LocalDate today);
 
