@@ -55,6 +55,9 @@ public class MenuService {
                 category.updateMenuCategoryNameEn(translationService.translateToEnglish(menuCreateRequest.getMenuCategoryName()));
                 category.updateMenuCategoryNameZh(translationService.translateToChinese(menuCreateRequest.getMenuCategoryName()));
                 category.updateMenuCategoryNameJp(translationService.translateToJapanese(menuCreateRequest.getMenuCategoryName()));
+//                category.updateMenuCategoryNameEn(translationService.translateToEnglish(menuCreateRequest.getMenuDescription()));
+//                category.updateMenuCategoryNameZh(translationService.translateToChinese(menuCreateRequest.getMenuDescription()));
+//                category.updateMenuCategoryNameJp(translationService.translateToJapanese(menuCreateRequest.getMenuDescription()));
             }
         } else {
             // 새 카테고리 등록
@@ -80,7 +83,7 @@ public class MenuService {
 
         // 4) 메뉴, 설명 번역 및 저장
         updateTranslatedMenuName(menu);
-        updateTranslatedMenuName(menu);
+        updateTranslatedMenuDescription(menu);
 
         // [CHANGED] 5) displayOrder = (카테고리 내) 최댓값 + 1
         Integer maxOrder = menuRepository.findMaxDisplayOrderByCategoryId(category.getId());
