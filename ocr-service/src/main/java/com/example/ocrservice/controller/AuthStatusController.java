@@ -27,4 +27,10 @@ public class AuthStatusController {
         log.info("현재 인증된 사용자 수: {}", count);
         return Map.of("count", count);
     }
+
+
+    @PostMapping("/reset") // ✨ 초기화용 API
+    public void resetAuthCount() {
+        authCount.set(0);
+    }
 }
