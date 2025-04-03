@@ -19,6 +19,7 @@ public class TranslationService {
     private final WebClient openAiWebClient;
 
     // 번역(한글 -> 영어) 예시
+    @Transactional
     public String translateToEnglish(String krText) {
         if (krText == null || krText.isEmpty()) return "";
 
@@ -49,6 +50,7 @@ public class TranslationService {
         String content = response.getChoices().get(0).getMessage().getContent();
         return content != null ? content.trim() : "";
     }
+    @Transactional
     public String translateToChinese(String krText) {
         if (krText == null || krText.isEmpty()) return "";
 
@@ -79,7 +81,7 @@ public class TranslationService {
         String content = response.getChoices().get(0).getMessage().getContent();
         return content != null ? content.trim() : "";
     }
-
+    @Transactional
     public String translateToJapanese(String krText) {
         if (krText == null || krText.isEmpty()) return "";
 
