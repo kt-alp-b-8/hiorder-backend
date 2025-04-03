@@ -160,14 +160,14 @@ public class Menu extends BaseEntity {
      * @param description
      */
     public void updateChineseVersionDescription(String description) {
-        this.menuNameZh = description;
+        this.menuDescriptionZh = description;
     }
     /**
      * 메뉴 일본어 설명 저장
      * @param description
      */
     public void updateJapaneseVersionDescription(String description) {
-        this.menuNameJp = description;
+        this.menuDescriptionJp = description;
     }
 
     /**
