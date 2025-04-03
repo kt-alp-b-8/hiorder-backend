@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 //@CrossOrigin(origins = "https://polite-pond-0844fed00.6.azurestaticapps.net")
 @RestController
 @RequestMapping("/ocr/api/ocr")

@@ -154,7 +154,7 @@
             // ✅ 인증 완료되면 이동
             if (totalCountFromUrl > 0 && authCount >= totalCountFromUrl) {
                 alert("모든 인원이 인증되었습니다. 메뉴 페이지로 이동합니다.");
-                window.location.href = "https://polite-pond-0844fed00.6.azurestaticapps.net/restaurants/1/tables/1/menu";
+                window.location.href = "http://localhost:5173/restaurants/1/tables/1/menu";
             }
         } catch (error) {
             console.error("인증 수 조회 중 오류:", error);
