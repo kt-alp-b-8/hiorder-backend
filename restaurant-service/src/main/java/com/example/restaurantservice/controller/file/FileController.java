@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order/file")
+@RequestMapping("/restaurant/file")
 public class FileController {
 
     private final BlobService azureBlobService;
