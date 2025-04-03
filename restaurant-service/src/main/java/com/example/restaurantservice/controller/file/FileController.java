@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://polite-pond-0844fed00.6.azurestaticapps.net")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/order/file")

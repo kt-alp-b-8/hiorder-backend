@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://polite-pond-0844fed00.6.azurestaticapps.net")
 @RestController
 @RequestMapping("/ocr/api/auth")
 @Slf4j

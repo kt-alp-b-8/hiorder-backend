@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import static com.example.restaurantservice.exception.ErrorCode.LOGIN_NO_PARAMETER;
 import static com.example.restaurantservice.exception.ErrorCode.RESTAURANT_NOT_FOUND;
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://polite-pond-0844fed00.6.azurestaticapps.net")
 @RestController
 @RequestMapping("/restaurant/login")
 @RequiredArgsConstructor
